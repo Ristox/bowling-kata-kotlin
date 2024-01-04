@@ -1,7 +1,7 @@
-package kata.bowling
+package ee.rsx.kata.victor.bowling
 
 class Bowling {
-    val rolls: MutableList<Int> = mutableListOf()
+    private val rolls: MutableList<Int> = mutableListOf()
 
     fun roll(pins: Int) {
         validateRoll(pins)

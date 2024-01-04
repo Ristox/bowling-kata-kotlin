@@ -1,4 +1,4 @@
-package kata.bowling
+package ee.rsx.kata.victor.bowling
 
 import org.assertj.core.api.Assertions.*
 import org.junit.jupiter.api.BeforeEach
