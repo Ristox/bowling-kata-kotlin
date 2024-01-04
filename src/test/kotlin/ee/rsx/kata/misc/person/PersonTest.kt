@@ -1,4 +1,4 @@
-package kata.bowling.person
+package ee.rsx.kata.misc.person
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test
