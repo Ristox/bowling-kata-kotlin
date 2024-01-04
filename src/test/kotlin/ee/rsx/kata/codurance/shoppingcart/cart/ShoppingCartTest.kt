@@ -9,6 +9,10 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import java.math.BigDecimal
 
+/**
+  https://www.codurance.com/katas/shopping-cart-kata
+ **/
+
 class ShoppingCartTest {
 
   @Nested

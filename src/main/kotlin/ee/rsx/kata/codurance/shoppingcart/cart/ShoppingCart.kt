@@ -5,9 +5,21 @@ import java.math.BigDecimal
 import java.math.BigInteger.ONE
 import java.math.RoundingMode
 
+/**
+  https://www.codurance.com/katas/shopping-cart-kata
+ **/
+
 class ShoppingCart {
 
+  private val cartItems: MutableList<CartItem> = mutableListOf()
+
   private val discounts: MutableSet<DiscountCoupon> = mutableSetOf()
+
+  val items: List<CartItem>
+    get() = cartItems
+
+  val totalItemsCount: Int
+    get() = cartItems.size
 
   val totalPrice: BigDecimal
     get() = cartItems.sumOf { it.product.fullPrice }
@@ -21,22 +33,14 @@ class ShoppingCart {
       )
       .setScale(2, RoundingMode.HALF_UP)
 
-  fun add(vararg products: Product) = cartItems.addAll(products.map { CartItem(it) })
-
   val totalPricePrinted
     get() = "$totalPrice €"
+
+  fun add(vararg products: Product) = cartItems.addAll(products.map { CartItem(it) })
 
   fun countOf(product: Product) = cartItems.count { it.product == product }
 
   fun applyDiscount(coupon: DiscountCoupon) {
     discounts.add(coupon)
   }
-
-  val items: List<CartItem>
-    get() = cartItems
-
-  private val cartItems: MutableList<CartItem> = mutableListOf()
-
-  val totalItemsCount: Int
-    get() = cartItems.size
 }
