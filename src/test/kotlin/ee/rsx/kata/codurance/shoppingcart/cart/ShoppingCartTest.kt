@@ -16,25 +16,25 @@ import java.math.BigDecimal
 class ShoppingCartTest {
 
   @Nested
-  @DisplayName("As Customer, I want to see an empty shopping cart")
+  @DisplayName("Empty shopping cart")
   inner class EmptyShoppingCart {
 
     @Test
-    fun `With total product items as 0`() {
+    fun `has total product items as 0`() {
       val cart = ShoppingCart()
 
       assertThat(cart.totalItemsCount).isEqualTo(0)
     }
 
     @Test
-    fun `With total price as 0,00`() {
+    fun `has total price of 0,00`() {
       val cart = ShoppingCart()
 
       assertThat(cart.totalPrice).isEqualTo(BigDecimal("0.00"))
     }
 
     @Test
-    fun `With total price printed as 0,00 €`() {
+    fun `has total price printed as 0,00 €`() {
       val cart = ShoppingCart()
 
       assertThat(cart.totalPricePrinted).isEqualTo("0.00 €")
