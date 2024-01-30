@@ -1,38 +1,26 @@
 package ee.rsx.kata.codurance.atm
 
-import ee.rsx.kata.codurance.atm.money.Cash
-import ee.rsx.kata.codurance.atm.money.CashType.BILL
-import ee.rsx.kata.codurance.atm.money.CashType.COIN
+import ee.rsx.kata.codurance.atm.money.Note
 
 class AtmMachine {
 
-    fun withdraw(amount: Int): List<Cash> {
-        var remaining = amount
-        val withdrawal: MutableList<Cash> = mutableListOf()
-        cashInDescendingNominations.forEach { cash ->
-            val modulus = remaining.mod(cash.nomination)
-            if (modulus != remaining) {
-                val amount = remaining - modulus
-                val howMany = amount / cash.nomination
-                repeat(howMany) {
-                    withdrawal.add(cash.copy())
-                }
-                remaining -= amount
-            }
-        }
-        return withdrawal
-    }
+    fun withdraw(amount: Int): List<Note> {
+        var remainingAmount = amount
 
-    private val cashInDescendingNominations =
-        listOf(
-            Cash(100, BILL),
-            Cash(10, BILL),
-            Cash(50, BILL),
-            Cash(20, BILL),
-            Cash(200, BILL),
-            Cash(5, BILL),
-            Cash(500, BILL),
-            Cash(2, COIN),
-            Cash(1, COIN),
-        ).sortedByDescending { it.nomination }
+        return Note.entries
+            .sortedByDescending { it.nomination }
+            .flatMap { note ->
+                val modulus = remainingAmount % note.nomination
+
+                if (modulus == remainingAmount)
+                    emptyList()
+                else {
+                    val sumToReduce = remainingAmount - modulus
+                    remainingAmount -= sumToReduce
+
+                    val notesCount = sumToReduce / note.nomination
+                    MutableList(size = notesCount) { note }
+                }
+            }
+    }
 }
