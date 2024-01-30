@@ -19,7 +19,7 @@ class AtmMachine {
                     remainingAmount -= sumToReduce
 
                     val notesCount = sumToReduce / note.nomination
-                    MutableList(size = notesCount) { note }
+                    List(notesCount) { note }
                 }
             }
     }
