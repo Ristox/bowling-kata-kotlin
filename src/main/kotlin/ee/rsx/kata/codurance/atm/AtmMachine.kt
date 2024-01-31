@@ -76,33 +76,38 @@ class AtmMachine(limitedFunds: Boolean = false) {
             .flatMap { note ->
                 val modulus = remainingAmount % note.nomination
 
-                if (remainingAmount == 0 || modulus == remainingAmount || funds.none { it == note })
+                if (remainingAmount == 0 || modulus == remainingAmount || funds.noneAvailableOf(note))
                     emptyList()
                 else {
                     val sumOfNotes = remainingAmount - modulus
                     val requiredNotesCount = sumOfNotes / note.nomination
 
                     val availableNotes = funds.countOf(note)
-                    val howManyToTake = min(availableNotes, requiredNotesCount)
+                    val numberOfNotes = min(availableNotes, requiredNotesCount)
+                    val sumToReduce = numberOfNotes * note.nomination
 
-                    val sumToReduce = howManyToTake * note.nomination
                     remainingAmount -= sumToReduce
 
-                    funds.take(howManyToTake, note)
+                    funds.take(numberOfNotes, note)
                 }
             }
 
-        // TODO if remaining amount is not 0, then we don't have enough of suitable notes - put them back and throw error
+        if (remainingAmount != 0) {
+            funds.addAll(notesTaken)
+            throw IllegalStateException("Not enough funds to withdraw required amount ($amount) - please use another ATM")
+        }
 
         return notesTaken
     }
 
     private fun List<Note>.countOf(note: Note) = count { it == note }
 
-    private fun MutableList<Note>.take(times: Int, note: Note): List<Note> {
+    private fun List<Note>.noneAvailableOf(note: Note) = none { it == note }
+
+    private fun MutableList<Note>.take(number: Int, ofNote: Note): List<Note> {
         val notesTaken: MutableList<Note> = mutableListOf()
-        repeat(times) {
-            val removeIndex = indexOfFirst { availableNote -> availableNote == note }
+        repeat(number) {
+            val removeIndex = indexOfFirst { availableNote -> availableNote == ofNote }
             notesTaken.add(removeAt(removeIndex))
         }
         return notesTaken
