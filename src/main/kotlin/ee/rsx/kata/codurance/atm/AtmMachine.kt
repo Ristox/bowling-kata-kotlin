@@ -38,7 +38,7 @@ class AtmMachine(limitedFunds: Boolean = false) {
         get() = funds?.let { funds.toList() }
             ?: throw IllegalStateException("Cannot determine remaining funds, ATM works with limitless funds")
 
-    fun withdraw(amount: Int): List<Note> {
+    fun withdraw(amount: Int): List<Note> { //TODO refactor to single withdraw method
         return if (funds != null) {
             withdrawFromFunds(amount)
         } else
@@ -59,8 +59,8 @@ class AtmMachine(limitedFunds: Boolean = false) {
                     val sumToReduce = remainingAmount - modulus
                     remainingAmount -= sumToReduce
 
-                    val notesCount = sumToReduce / note.nomination
-                    List(notesCount) { note }
+                    val numberOfNotes = sumToReduce / note.nomination
+                    List(numberOfNotes) { note }
                 }
             }
 

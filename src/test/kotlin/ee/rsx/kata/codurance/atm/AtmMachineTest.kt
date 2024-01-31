@@ -100,19 +100,15 @@ class AtmMachineTest {
 
         val expectedRemainingBalance = initialBalance - 1725
         assertThat(atm.remainingBalance).isEqualTo(expectedRemainingBalance)
-        atm.remainingFunds.assertHasExactlyNotesInCounts(
-            notesOfCount = mapOf(
-                BILL_500 to 0,
-                BILL_200 to 0,
-                BILL_100 to 4,
-                BILL_50 to 12,
-                BILL_20 to 19,
-                BILL_10 to 50,
-                BILL_5 to 99,
-                COIN_2 to 250,
-                COIN_1 to 500,
-            )
-        )
+        atm.remainingFunds.assertHasExactlyNotesInCounts(mapOf(
+            BILL_100 to 4,
+            BILL_50 to 12,
+            BILL_20 to 19,
+            BILL_10 to 50,
+            BILL_5 to 99,
+            COIN_2 to 250,
+            COIN_1 to 500
+        ))
     }
 
     @Test
@@ -140,19 +136,12 @@ class AtmMachineTest {
         assertThat(atm.remainingBalance)
             .isEqualTo(expectedRemainingBalance)
 
-        atm.remainingFunds.assertHasExactlyNotesInCounts(
-            mapOf(
-                BILL_500 to 0,
-                BILL_200 to 0,
-                BILL_100 to 0,
-                BILL_50 to 0,
-                BILL_20 to 0,
-                BILL_10 to 6,
-                BILL_5 to 98,
-                COIN_2 to 250,
-                COIN_1 to 500,
-            )
-        )
+        atm.remainingFunds.assertHasExactlyNotesInCounts(mapOf(
+            BILL_10 to 6,
+            BILL_5 to 98,
+            COIN_2 to 250,
+            COIN_1 to 500,
+        ))
     }
 
     @Test
