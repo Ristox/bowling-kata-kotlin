@@ -9,7 +9,7 @@ import org.junit.jupiter.api.assertThrows
 class AtmMachineTest {
 
     @Test
-    fun `withdraw funds of 434 Euros`() {
+    fun `withdraw funds of 434 Euros, from limitless ATM`() {
         val atm = AtmMachine()
 
         val withdrawal = atm.withdraw(434)
@@ -27,7 +27,7 @@ class AtmMachineTest {
     }
 
     @Test
-    fun `withdraw funds of 1397 Euros`() {
+    fun `withdraw funds of 1397 Euros, from limitless ATM`() {
         val atm = AtmMachine()
 
         val withdrawal = atm.withdraw(1397)
@@ -43,6 +43,38 @@ class AtmMachineTest {
                     BILL_20 to 2,
                     BILL_5 to 1,
                     COIN_2 to 1
+                ))
+            )
+    }
+
+    @Test
+    fun `withdraw funds of 10_000 Euros, from limitless ATM`() {
+        val atm = AtmMachine()
+
+        val withdrawal = atm.withdraw(10_000)
+
+        assertThat(withdrawal.sumOf { it.nomination }).isEqualTo(10_000)
+        assertThat(withdrawal)
+            .containsExactlyInAnyOrderElementsOf(
+                listOfNotesInCounts(mapOf(
+                    BILL_500 to 20
+                ))
+            )
+    }
+
+    @Test
+    fun `withdraw funds of 500_800 Euros, from limitless ATM`() {
+        val atm = AtmMachine()
+
+        val withdrawal = atm.withdraw(500_800)
+
+        assertThat(withdrawal.sumOf { it.nomination }).isEqualTo(500_800)
+        assertThat(withdrawal)
+            .containsExactlyInAnyOrderElementsOf(
+                listOfNotesInCounts(mapOf(
+                    BILL_500 to 1001,
+                    BILL_200 to 1,
+                    BILL_100 to 1,
                 ))
             )
     }
