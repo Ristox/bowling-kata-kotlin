@@ -45,18 +45,15 @@ class AtmMachine(limitedFunds: Boolean = false) {
             .sortedByDescending { it.nomination }
             .flatMap { note ->
                 val modulus = remainingAmount % note.nomination
+                val nominationMoreThanRemaining = modulus == remainingAmount
 
-                if (remainingAmount == 0 || modulus == remainingAmount || funds?.noneAvailableOf(note) == true)
+                if (remainingAmount == 0 || nominationMoreThanRemaining || funds?.noneAvailableOf(note) == true)
                     emptyList()
                 else {
                     val sumOfNotes = remainingAmount - modulus
-                    val requiredNotesCount = sumOfNotes / note.nomination
 
-                    val availableNotes = funds?.countOf(note) ?: requiredNotesCount
-                    val numberOfNotes = min(availableNotes, requiredNotesCount)
-                    val sumToReduce = numberOfNotes * note.nomination
-
-                    remainingAmount -= sumToReduce
+                    val numberOfNotes = determineNumberOfNotesToTake(sumOfNotes, note)
+                    remainingAmount -= numberOfNotes * note.nomination
 
                     funds?.take(numberOfNotes, note)
                         ?: List(numberOfNotes) { note }
@@ -69,9 +66,15 @@ class AtmMachine(limitedFunds: Boolean = false) {
         return notesTaken
     }
 
-    private fun List<Note>.countOf(note: Note) = count { it == note }
-
     private fun List<Note>.noneAvailableOf(note: Note) = none { it == note }
+
+    private fun determineNumberOfNotesToTake(sumOfNotes: Int, note: Note): Int {
+        val requiredNotesCount = sumOfNotes / note.nomination
+        val availableNotes = funds?.countOf(note) ?: requiredNotesCount
+        return min(availableNotes, requiredNotesCount)
+    }
+
+    private fun List<Note>.countOf(note: Note) = count { it == note }
 
     private fun MutableList<Note>.take(number: Int, ofNote: Note): List<Note> {
         val notesTaken: MutableList<Note> = mutableListOf()

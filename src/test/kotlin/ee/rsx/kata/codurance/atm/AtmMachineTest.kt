@@ -171,9 +171,6 @@ class AtmMachineTest {
         notesOfCount.forEach { (note, countOf) -> assertHas(countOf, note) }
     }
 
-    private fun listOfNotesInCounts(notesOfCount: Map<Note, Int>): MutableList<Note> {
-        val notes = mutableListOf<Note>()
-        notesOfCount.forEach { (note, count) -> repeat(count) { notes.add(note) } }
-        return notes
-    }
+    private fun listOfNotesInCounts(notesOfCount: Map<Note, Int>) =
+        notesOfCount.flatMap { (note, count) -> List(count) { note } }
 }
