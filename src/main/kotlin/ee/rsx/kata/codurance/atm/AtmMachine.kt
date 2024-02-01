@@ -38,65 +38,34 @@ class AtmMachine(limitedFunds: Boolean = false) {
         get() = funds?.let { funds.toList() }
             ?: throw IllegalStateException("Cannot determine remaining funds, ATM works with limitless funds")
 
-    fun withdraw(amount: Int): List<Note> { //TODO refactor to single withdraw method
-        return if (funds != null) {
-            withdrawFromFunds(amount)
-        } else
-            withdrawLimitless(amount)
-    }
-
-    private fun withdrawLimitless(amount: Int): List<Note> {
+    fun withdraw(amount: Int): List<Note> {
         var remainingAmount = amount
 
-        return Note.entries
+        val notesTaken = entries
             .sortedByDescending { it.nomination }
             .flatMap { note ->
                 val modulus = remainingAmount % note.nomination
 
-                if (modulus == remainingAmount){
-                    emptyList()}
-                else {
-                    val sumToReduce = remainingAmount - modulus
-                    remainingAmount -= sumToReduce
-
-                    val numberOfNotes = sumToReduce / note.nomination
-                    List(numberOfNotes) { note }
-                }
-            }
-
-    }
-
-    private fun withdrawFromFunds(amount: Int): List<Note> {
-        var remainingAmount = amount
-
-        requireNotNull(funds)
-
-        val notesTaken = Note.entries
-            .sortedByDescending { it.nomination }
-            .flatMap { note ->
-                val modulus = remainingAmount % note.nomination
-
-                if (remainingAmount == 0 || modulus == remainingAmount || funds.noneAvailableOf(note))
+                if (remainingAmount == 0 || modulus == remainingAmount || funds?.noneAvailableOf(note) == true)
                     emptyList()
                 else {
                     val sumOfNotes = remainingAmount - modulus
                     val requiredNotesCount = sumOfNotes / note.nomination
 
-                    val availableNotes = funds.countOf(note)
+                    val availableNotes = funds?.countOf(note) ?: requiredNotesCount
                     val numberOfNotes = min(availableNotes, requiredNotesCount)
                     val sumToReduce = numberOfNotes * note.nomination
 
                     remainingAmount -= sumToReduce
 
-                    funds.take(numberOfNotes, note)
+                    funds?.take(numberOfNotes, note)
+                        ?: List(numberOfNotes) { note }
                 }
             }
-
         if (remainingAmount != 0) {
-            funds.addAll(notesTaken)
+            funds?.addAll(notesTaken)
             throw IllegalStateException("Not enough funds to withdraw required amount ($amount) - please use another ATM")
         }
-
         return notesTaken
     }
 
