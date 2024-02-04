@@ -17,7 +17,21 @@ class RomanNumber(private val value: Int) {
     )
 
     fun stringValue(): String {
-        return if (value > 0) baseValues[value] else throw IllegalArgumentException("Value must be positive integer")
+        if (value <= 0)
+            throw IllegalArgumentException("Value must be positive integer")
+
+        if (value > 39)
+            throw IllegalArgumentException("Unsupported yet")
+
+        val multiplierValue = 10
+        val multiplierLiteral = "X"
+
+        val remainder = value % multiplierValue
+        val timesOfMultiplier = (value - remainder) / multiplierValue
+
+        val multiplierLiterals = List(timesOfMultiplier) { multiplierLiteral }.joinToString("")
+
+        return multiplierLiterals + baseValues[remainder]
     }
 }
 

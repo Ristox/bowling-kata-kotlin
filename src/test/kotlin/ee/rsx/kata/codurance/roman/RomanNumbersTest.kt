@@ -27,6 +27,30 @@ class RomanNumbersTest {
         }
     }
 
+    @ParameterizedTest
+    @MethodSource("teenValues")
+    fun `converts arabic numbers 11-20 to expected Roman numbers`(value: Int, expectedRomanLiteral: String) {
+        val roman = toRoman(value)
+
+        assertThat(roman).isEqualTo(expectedRomanLiteral)
+    }
+
+    @ParameterizedTest
+    @MethodSource("twentiesValues")
+    fun `converts arabic numbers 21-30 to expected Roman numbers`(value: Int, expectedRomanLiteral: String) {
+        val roman = toRoman(value)
+
+        assertThat(roman).isEqualTo(expectedRomanLiteral)
+    }
+
+    @ParameterizedTest
+    @MethodSource("thirtiesValues")
+    fun `converts arabic numbers 31-39 to expected Roman numbers`(value: Int, expectedRomanLiteral: String) {
+        val roman = toRoman(value)
+
+        assertThat(roman).isEqualTo(expectedRomanLiteral)
+    }
+
     companion object {
         @JvmStatic
         fun baseValues(): Stream<Arguments> = Stream.of(
@@ -40,6 +64,47 @@ class RomanNumbersTest {
             Arguments.of(8, "VIII"),
             Arguments.of(9, "IX"),
             Arguments.of(10, "X")
+        )
+
+        @JvmStatic
+        fun teenValues(): Stream<Arguments> = Stream.of(
+            Arguments.of(11, "XI"),
+            Arguments.of(12, "XII"),
+            Arguments.of(13, "XIII"),
+            Arguments.of(14, "XIV"),
+            Arguments.of(15, "XV"),
+            Arguments.of(16, "XVI"),
+            Arguments.of(17, "XVII"),
+            Arguments.of(18, "XVIII"),
+            Arguments.of(19, "XIX"),
+            Arguments.of(20, "XX")
+        )
+
+        @JvmStatic
+        fun twentiesValues(): Stream<Arguments> = Stream.of(
+            Arguments.of(21, "XXI"),
+            Arguments.of(22, "XXII"),
+            Arguments.of(23, "XXIII"),
+            Arguments.of(24, "XXIV"),
+            Arguments.of(25, "XXV"),
+            Arguments.of(26, "XXVI"),
+            Arguments.of(27, "XXVII"),
+            Arguments.of(28, "XXVIII"),
+            Arguments.of(29, "XXIX"),
+            Arguments.of(30, "XXX")
+        )
+
+        @JvmStatic
+        fun thirtiesValues(): Stream<Arguments> = Stream.of(
+            Arguments.of(31, "XXXI"),
+            Arguments.of(32, "XXXII"),
+            Arguments.of(33, "XXXIII"),
+            Arguments.of(34, "XXXIV"),
+            Arguments.of(35, "XXXV"),
+            Arguments.of(36, "XXXVI"),
+            Arguments.of(37, "XXXVII"),
+            Arguments.of(38, "XXXVIII"),
+            Arguments.of(39, "XXXIX")
         )
     }
 }
