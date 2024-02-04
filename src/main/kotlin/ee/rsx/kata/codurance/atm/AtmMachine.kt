@@ -44,31 +44,34 @@ class AtmMachine(limitedFunds: Boolean = false) {
         val notesTaken = entries
             .sortedByDescending { it.nomination }
             .flatMap { note ->
-                val modulus = remainingAmount % note.nomination
-                val nominationMoreThanRemaining = modulus == remainingAmount
-
-                if (remainingAmount == 0 || nominationMoreThanRemaining || funds?.noneAvailableOf(note) == true)
+                if (remainingAmount == 0 || note.nomination > remainingAmount || funds?.noneAvailableOf(note) == true)
                     emptyList()
                 else {
-                    val sumOfNotes = remainingAmount - modulus
-
-                    val numberOfNotes = determineNumberOfNotesToTake(sumOfNotes, note)
+                    val numberOfNotes = determineNumberOfNotesToTake(remainingAmount, note)
                     remainingAmount -= numberOfNotes * note.nomination
 
                     funds?.take(numberOfNotes, note)
                         ?: List(numberOfNotes) { note }
                 }
             }
-        if (remainingAmount != 0) {
-            funds?.addAll(notesTaken)
-            throw IllegalStateException("Not enough funds to withdraw required amount ($amount) - please use another ATM")
-        }
+
+        ensureCompleteWithdrawal(remainingAmount, notesTaken, amount)
+
         return notesTaken
+    }
+
+    private fun ensureCompleteWithdrawal(remainingAmount: Int, notesTaken: List<Note>, amount: Int) {
+        if (remainingAmount == 0) {
+            return
+        }
+        funds?.addAll(notesTaken)
+        throw IllegalStateException("Not enough funds to withdraw required amount ($amount) - please use another ATM")
     }
 
     private fun List<Note>.noneAvailableOf(note: Note) = none { it == note }
 
-    private fun determineNumberOfNotesToTake(sumOfNotes: Int, note: Note): Int {
+    private fun determineNumberOfNotesToTake(remainingAmount: Int, note: Note): Int {
+        val sumOfNotes = remainingAmount - (remainingAmount % note.nomination)
         val requiredNotesCount = sumOfNotes / note.nomination
         val availableNotes = funds?.countOf(note) ?: requiredNotesCount
         return min(availableNotes, requiredNotesCount)

@@ -1,9 +1,9 @@
 package ee.rsx.kata.codurance.atm.money
 
-import ee.rsx.kata.codurance.atm.money.CashType.BILL
-import ee.rsx.kata.codurance.atm.money.CashType.COIN
+import ee.rsx.kata.codurance.atm.money.NoteType.BILL
+import ee.rsx.kata.codurance.atm.money.NoteType.COIN
 
-enum class Note(val nomination: Int, type: CashType) {
+enum class Note(val nomination: Int, type: NoteType) {
   BILL_500(500, BILL),
   BILL_200(200, BILL),
   BILL_100(100, BILL),
@@ -15,7 +15,7 @@ enum class Note(val nomination: Int, type: CashType) {
   COIN_1(1, COIN)
 }
 
-enum class CashType {
+enum class NoteType {
   COIN,
   BILL
 }
