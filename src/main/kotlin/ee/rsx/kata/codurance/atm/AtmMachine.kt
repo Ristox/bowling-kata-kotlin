@@ -41,7 +41,7 @@ class AtmMachine(limitedFunds: Boolean = false) {
     fun withdraw(amount: Int): List<Note> {
         var remainingAmount = amount
 
-        val notesTaken = entries
+        val notesTaken = Note.entries
             .sortedByDescending { it.nomination }
             .flatMap { note ->
                 if (remainingAmount == 0 || note.nomination > remainingAmount || funds?.noneAvailableOf(note) == true)
