@@ -99,6 +99,15 @@ internal class BowlingTest {
         assertThat(game.score()).isEqualTo(300)
     }
 
+    @Test
+    fun expectedScoreWhenRollingThreeStrikes() {
+        roll(10, 10, 10)
+
+        rollZeros(14)
+
+        assertThat(game.score()).isEqualTo(60)
+    }
+
     private fun roll(vararg i: Int) {
         i.iterator().forEachRemaining {
             game.roll(it)
